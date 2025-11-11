@@ -9,3 +9,9 @@ variable "location" {
   type        = string
   default     = "westeurope"
 }
+
+variable "student_name" {
+    description = "Name/Student number for tagging"
+    type = string
+    default = "Arno-L00188491"
+}

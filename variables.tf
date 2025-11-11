@@ -7,7 +7,7 @@ variable "resource_group_name" {
 variable "location" {
   description = "Azure region where reources will be created and hosted"
   type        = string
-  default     = "westeurope"
+  default     = "swedencentral"
 }
 
 variable "student_name" {

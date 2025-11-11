@@ -11,13 +11,13 @@ variable "location" {
 }
 
 variable "student_name" {
-    description = "Name/Student number for tagging"
-    type = string
-    default = "Arno-L00188491"
+  description = "Name/Student number for tagging"
+  type        = string
+  default     = "Arno-L00188491"
 }
 
 variable "vnet_address_space" {
-    description = "Address space for the virtual network"
-    type = list(string)
-    default = ["10.0.0.0/16"]
+  description = "Address space for the virtual network"
+  type        = list(string)
+  default     = ["10.0.0.0/16"]
 }

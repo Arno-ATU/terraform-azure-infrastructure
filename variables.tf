@@ -15,3 +15,9 @@ variable "student_name" {
     type = string
     default = "Arno-L00188491"
 }
+
+variable "vnet_address_space" {
+    description = "Address space for the virtual network"
+    type = list(string)
+    default = ["10.0.0.0/16"]
+}

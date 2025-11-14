@@ -28,7 +28,9 @@ resource "azurerm_virtual_network" "main" {
   }
 }
 
-
+# =================================================
+# PUBLIC SUBNETS
+#==================================================
 # Public Subnet 1 - Availability Zone 1
 # Zone 1 provides isolation from Zone 2 for high availability
 
@@ -49,4 +51,31 @@ resource "azurerm_subnet" "public_2" {
   resource_group_name  = azurerm_resource_group.main.name
   virtual_network_name = azurerm_virtual_network.main.name
   address_prefixes     = ["10.0.2.0/24"]
+}
+
+
+# =================================================
+# PRIVATE SUBNETS
+#==================================================
+# Private Subnet 1 - Availability Zone 1
+# No direct internet access - only accessible from within the VNet
+# Provides a security layer for sensitive data and internal services
+
+resource "azurerm_subnet" "private_1" {
+  name                 = "subnet-private-az1"
+  resource_group_name  = azurerm_resource_group.main.name
+  virtual_network_name = azurerm_virtual_network.main.name
+  address_prefixes     = ["10.0.10.0/24"]
+}
+
+
+# Private Subnet 2 - Availability Zone 2
+# Ensures the database/backend services survive Zone 1 failure
+# Paired with private subnet 1 for high availability
+
+resource "azurerm_subnet" "private_2" {
+  name                 = "subnet-private-az2"
+  resource_group_name  = azurerm_resource_group.main.name
+  virtual_network_name = azurerm_virtual_network.main.name
+  address_prefixes     = ["10.0.20.0/24"]
 }

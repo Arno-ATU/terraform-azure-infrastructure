@@ -176,3 +176,40 @@ resource "azurerm_network_security_rule" "allow_from_public" {
   resource_group_name         = azurerm_resource_group.main.name
   network_security_group_name = azurerm_network_security_group.private.name
 }
+
+
+# ==============================================
+# NSG ASSOCIATIONS - APPLY FIREWALLS TO SUBNETS
+# ===============================================
+
+# Associate public NSG with public subnet 1
+# This applies the firewall rules to all resources in this subnet
+
+resource "azurerm_subnet_network_security_group_association" "public_1" {
+  subnet_id                 = azurerm_subnet.public_1.id
+  network_security_group_id = azurerm_network_security_group.public.id
+}
+
+# Associate public NSG with public subnet 2
+# Both public subnets get the same security rules
+
+resource "azurerm_subnet_network_security_group_association" "public_2" {
+  subnet_id                 = azurerm_subnet.public_2.id
+  network_security_group_id = azurerm_network_security_group.public.id
+}
+
+# Associate private NSG with private subnet 1
+# Applies restrictive rules to the backend tier
+
+resource "azurerm_subnet_network_security_group_association" "private_1" {
+  subnet_id                 = azurerm_subnet.private_1.id
+  network_security_group_id = azurerm_network_security_group.private.id
+}
+
+# Associate private NSG with private subnet 2
+# Bothh of the  private subnets get the same security rules
+
+resource "azurerm_subnet_network_security_group_association" "private_2" {
+  subnet_id                 = azurerm_subnet.private_2.id
+  network_security_group_id = azurerm_network_security_group.private.id
+}

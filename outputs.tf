@@ -49,9 +49,9 @@ output "private_subnet_2_id" {
 }
 
 
-# =========================================================
+# ======================================================
 # NSG OUTPUTS
-# =========================================================
+# ======================================================
 
 output "public_nsg_id" {
   description = "ID of the public subnet Network Security Group"
@@ -71,4 +71,22 @@ output "public_nsg_name" {
 output "private_nsg_name" {
   description = "Name of the private subnet NSG"
   value       = azurerm_network_security_group.private.name
+}
+
+
+
+# ==================================
+# SSH Key Outputs
+# ====================================
+
+# These show where the SSH key is and confirm it was created
+
+output "ssh_private_key_path" {
+  description = "Path to SSH private key file"
+  value       = local_file.private_key.filename
+}
+
+output "ssh_key_generated" {
+  description = "Confirmation that SSH key was generated"
+  value       = "SSH key successfully generated at ${local_file.private_key.filename}"
 }

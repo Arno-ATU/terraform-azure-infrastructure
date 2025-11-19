@@ -213,3 +213,29 @@ resource "azurerm_subnet_network_security_group_association" "private_2" {
   subnet_id                 = azurerm_subnet.private_2.id
   network_security_group_id = azurerm_network_security_group.private.id
 }
+
+
+
+# =========================================================
+# SSH KEY FOR VM ACCESS
+# =========================================================
+
+# Generate SSH Key Pair
+# This creates a 4096-bit RSA key pair automatically
+# The public key will go on the VMs, private key stays on local computer
+
+resource "tls_private_key" "ssh" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+# Save Private Key to Local File
+# This saves the private key so thhat we can use it with: ssh -i ssh-key.pem
+# File permissions: 0600 means only YOU/WE can read/write it (security!)
+# Public key is stored in Terraform state (for VM creation)
+
+resource "local_file" "private_key" {
+  content         = tls_private_key.ssh.private_key_pem
+  filename        = "${path.module}/ssh-key.pem"
+  file_permission = "0600"
+}

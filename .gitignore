@@ -4,6 +4,9 @@
 # .tfstate files
 *.tfstate
 *.tfstate.*
+.terraform.lock.hcl
+crash.log
+crash.*.log
 
 # Crash log files
 crash.log
@@ -35,3 +38,24 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# SSH Keys - WE CAN NEVER commit these!
+*.pem
+*.key
+id_rsa*
+ssh-key*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Backup files
+*.backup
+*.bak

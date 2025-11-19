@@ -85,8 +85,13 @@ resource "azurerm_subnet" "private_2" {
 # NETWORK SECURITY GROUPS (NSGs) - FIREWALLS
 # =========================================================
 
-# Public Subnet NSG
+
+
+# Publicc Subnet NSG
+# ==================
+
 # This NSG will be applied to both public subnets
+
 resource "azurerm_network_security_group" "public" {
   name                = "nsg-public-subnets"
   location            = azurerm_resource_group.main.location
@@ -107,10 +112,10 @@ resource "azurerm_network_security_rule" "allow_http" {
   direction                   = "Inbound"
   access                      = "Allow"
   protocol                    = "Tcp"
-  source_port_range          = "*"
-  destination_port_range     = "80"
-  source_address_prefix      = "*"
-  destination_address_prefix = "*"
+  source_port_range           = "*"
+  destination_port_range      = "80"
+  source_address_prefix       = "*"
+  destination_address_prefix  = "*"
   resource_group_name         = azurerm_resource_group.main.name
   network_security_group_name = azurerm_network_security_group.public.name
 }
@@ -126,10 +131,48 @@ resource "azurerm_network_security_rule" "allow_ssh" {
   direction                   = "Inbound"
   access                      = "Allow"
   protocol                    = "Tcp"
-  source_port_range          = "*"
-  destination_port_range     = "22"
-  source_address_prefix      = "*"
-  destination_address_prefix = "*"
+  source_port_range           = "*"
+  destination_port_range      = "22"
+  source_address_prefix       = "*"
+  destination_address_prefix  = "*"
   resource_group_name         = azurerm_resource_group.main.name
   network_security_group_name = azurerm_network_security_group.public.name
+}
+
+
+
+# Private Subnet NSG
+# ==================
+
+# This NSG will be applied to both private subnets
+# Only allows traffic from public subnets
+
+resource "azurerm_network_security_group" "private" {
+  name                = "nsg-private-subnets"
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+
+  tags = {
+    Environment = "Learning"
+    Project     = "Terraform-Assignment"
+    Student     = var.student_name
+  }
+}
+
+# Inbound Rule: Allow traffic from public subnets only
+# Note: Azure denies all other inbound traffic by default
+# No explicit deny rule needed - Azure's default deny provides adequate security
+
+resource "azurerm_network_security_rule" "allow_from_public" {
+  name                        = "AllowFromPublicSubnets"
+  priority                    = 100
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "*"
+  source_port_range           = "*"
+  destination_port_range      = "*"
+  source_address_prefixes     = ["10.0.1.0/24", "10.0.2.0/24"]
+  destination_address_prefix  = "*"
+  resource_group_name         = azurerm_resource_group.main.name
+  network_security_group_name = azurerm_network_security_group.private.name
 }

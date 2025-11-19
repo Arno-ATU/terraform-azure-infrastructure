@@ -79,3 +79,57 @@ resource "azurerm_subnet" "private_2" {
   virtual_network_name = azurerm_virtual_network.main.name
   address_prefixes     = ["10.0.20.0/24"]
 }
+
+
+# =========================================================
+# NETWORK SECURITY GROUPS (NSGs) - FIREWALLS
+# =========================================================
+
+# Public Subnet NSG
+# This NSG will be applied to both public subnets
+resource "azurerm_network_security_group" "public" {
+  name                = "nsg-public-subnets"
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+
+  tags = {
+    Environment = "Learning"
+    Project     = "Terraform-Assignment"
+    Student     = var.student_name
+  }
+}
+
+# Inbound Rule: Allow HTTP traffic from internet
+# Priority: Lower number = higher priority (100 is processed first)
+resource "azurerm_network_security_rule" "allow_http" {
+  name                        = "AllowHTTP"
+  priority                    = 100
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range          = "*"
+  destination_port_range     = "80"
+  source_address_prefix      = "*"
+  destination_address_prefix = "*"
+  resource_group_name         = azurerm_resource_group.main.name
+  network_security_group_name = azurerm_network_security_group.public.name
+}
+
+
+# Inbound Rule: Allow SSH for server management
+# We nneed to be able to log in and manage the servers
+# In production, this should be restricted to specific IPs
+
+resource "azurerm_network_security_rule" "allow_ssh" {
+  name                        = "AllowSSH"
+  priority                    = 120
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range          = "*"
+  destination_port_range     = "22"
+  source_address_prefix      = "*"
+  destination_address_prefix = "*"
+  resource_group_name         = azurerm_resource_group.main.name
+  network_security_group_name = azurerm_network_security_group.public.name
+}

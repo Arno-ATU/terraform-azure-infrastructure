@@ -35,3 +35,24 @@ resource "azurerm_lb" "main" {
     Student     = var.student_name
   }
 }
+
+# Backend Address Pool
+# This is the pool of VMs that can recieve traffic
+resource "azurerm_lb_backend_address_pool" "main" {
+  loadbalancer_id = azurerm_lb.main.id
+  name            = "backend-pool"
+}
+
+# Associate VM1 NIC with Backend Pool
+resource "azurerm_network_interface_backend_address_pool_association" "vm1" {
+  network_interface_id    = azurerm_network_interface.vm1.id
+  ip_configuration_name   = "internal"
+  backend_address_pool_id = azurerm_lb_backend_address_pool.main.id
+}
+
+# Associate VM2 NIC with Backend Pool
+resource "azurerm_network_interface_backend_address_pool_association" "vm2" {
+  network_interface_id    = azurerm_network_interface.vm2.id
+  ip_configuration_name   = "internal"
+  backend_address_pool_id = azurerm_lb_backend_address_pool.main.id
+}

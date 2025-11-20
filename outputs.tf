@@ -131,3 +131,13 @@ output "ssh_connection_vm2" {
   description = "SSH command to connect to VM2"
   value       = "ssh -i ssh-key.pem azureuser@${azurerm_public_ip.vm2.ip_address}"
 }
+
+
+# =================================================
+# LOAD BALANCER OUTPUTS
+# =================================================
+
+output "load_balancer_ip" {
+  description = "Public IP of the load balancer"
+  value       = azurerm_public_ip.lb.ip_address
+}

@@ -75,6 +75,30 @@ resource "azurerm_linux_virtual_machine" "vm1" {
   admin_username      = "azureuser"
   zone                = "1"
 
+  custom_data = base64encode(<<-EOF
+    #!/bin/bash
+    apt-get update
+    apt-get install -y nginx
+    
+    cat > /var/www/html/index.html <<'HTML'
+    <!DOCTYPE html>
+    <html>
+    <head><title>HA Web Server</title></head>
+    <body style="font-family: Arial; margin: 50px;">
+      <h1>Web Server 1 - Zone 1</h1>
+      <h2>Student: Arno-L00188491</h2>
+      <p>MSc DevOps - Terraform Assignment</p>
+      <p>This server is running in Availability Zone 1</p>
+    </body>
+    </html>
+    HTML
+    
+    systemctl enable nginx
+    systemctl start nginx
+  EOF
+  )
+
+
   network_interface_ids = [
     azurerm_network_interface.vm1.id,
   ]

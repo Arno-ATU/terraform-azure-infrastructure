@@ -90,3 +90,44 @@ output "ssh_key_generated" {
   description = "Confirmation that SSH key was generated"
   value       = "SSH key successfully generated at ${local_file.private_key.filename}"
 }
+
+
+# =================================================
+# VM1 OUTPUTS
+# =================================================
+
+output "vm1_public_ip" {
+  description = "Public IP address of Web Server 1"
+  value       = azurerm_public_ip.vm1.ip_address
+}
+
+output "vm1_private_ip" {
+  description = "Private IP address of Web Server 1"
+  value       = azurerm_network_interface.vm1.private_ip_address
+}
+
+output "ssh_connection_vm1" {
+  description = "SSH command to connect to VM1"
+  value       = "ssh -i ssh-key.pem azureuser@${azurerm_public_ip.vm1.ip_address}"
+}
+
+
+
+# =================================================
+# VM2 OUTPUTS
+# =================================================
+
+output "vm2_public_ip" {
+  description = "Public IP address of Web Server 2"
+  value       = azurerm_public_ip.vm2.ip_address
+}
+
+output "vm2_private_ip" {
+  description = "Private IP address of Web Server 2"
+  value       = azurerm_network_interface.vm2.private_ip_address
+}
+
+output "ssh_connection_vm2" {
+  description = "SSH command to connect to VM2"
+  value       = "ssh -i ssh-key.pem azureuser@${azurerm_public_ip.vm2.ip_address}"
+}

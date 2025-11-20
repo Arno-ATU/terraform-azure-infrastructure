@@ -141,3 +141,8 @@ output "load_balancer_ip" {
   description = "Public IP of the load balancer"
   value       = azurerm_public_ip.lb.ip_address
 }
+
+output "load_balancer_url" {
+  description = "URL to access the load balanced website"
+  value       = "http://${azurerm_public_ip.lb.ip_address}"
+}

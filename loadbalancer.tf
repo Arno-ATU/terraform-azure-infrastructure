@@ -56,3 +56,34 @@ resource "azurerm_network_interface_backend_address_pool_association" "vm2" {
   ip_configuration_name   = "internal"
   backend_address_pool_id = azurerm_lb_backend_address_pool.main.id
 }
+
+
+# =================================================
+# Health Probe & LB Rule
+# =================================================
+
+# Health Probe
+# Checks every 5 seconds if nginx is responding on port 80
+resource "azurerm_lb_probe" "http" {
+  loadbalancer_id     = azurerm_lb.main.id
+  name                = "http-probe"
+  protocol            = "Http"
+  port                = 80
+  request_path        = "/"
+  interval_in_seconds = 5
+  number_of_probes    = 2
+}
+
+# Load Balancing Rule
+# Distributes HTTP traffic across healthy VMs
+resource "azurerm_lb_rule" "http" {
+  loadbalancer_id                = azurerm_lb.main.id
+  name                           = "http-rule"
+  protocol                       = "Tcp"
+  frontend_port                  = 80
+  backend_port                   = 80
+  frontend_ip_configuration_name = "frontend"
+  backend_address_pool_ids       = [azurerm_lb_backend_address_pool.main.id]
+  probe_id                       = azurerm_lb_probe.http.id
+  disable_outbound_snat          = false
+}
